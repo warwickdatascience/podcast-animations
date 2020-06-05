@@ -6,7 +6,6 @@ import shutil
 import subprocess
 import tempfile
 
-import colour
 import cv2
 import imageio
 import numpy as np
@@ -30,7 +29,7 @@ NUM_FRAMES = SECS * FPS
 
 
 class Rule30:
-    """A class for running Rule 30."""
+    """A class for generating Rule 30."""
 
     neighbours = np.array([[1, 2, 4]], np.uint8)
     kernel = np.array([0, 1, 2, 3, 4, 0, 0, 0])
@@ -43,6 +42,12 @@ class Rule30:
     ], np.uint8)
 
     def __init__(self, width, height):
+        """Initialise the Rule 30 generator and set initial state.
+
+        Args:
+            width (int): State width
+            height(int): State height
+        """
         self.width = width
         self.height = height
 
@@ -54,10 +59,12 @@ class Rule30:
         self._update_rgb()
 
     def step(self):
+        """Update the state and RGB representation."""
         self._update_state()
         self._update_rgb()
     
     def _update_state(self):
+        """Update the state by applying Rule 30."""
         conv_row_alive = (self.state[-1, None, :] > 0).astype(np.uint8)
         rule_index = sg.convolve2d(conv_row_alive, self.neighbours,
                                    mode='same', boundary='wrap')
@@ -69,6 +76,7 @@ class Rule30:
             self.state[-self.peak_height, self.width // 2] = 2
 
     def _update_rgb(self):
+        """Convert the state to an RGB array."""
         self.rgb = self.colours[self.state]
 
 
