@@ -18,7 +18,7 @@ VIDEO_WIDTH = 1920
 VIDEO_HEIGHT = 1080
 SECS = int(60 * 1)
 FPS = 30
-PIXEL_SIZE = 5
+PIXEL_SIZE = 2
 OUTPUT_PATH = 'rule_30.mp4'
 FFMPEG_PATH = '/usr/bin/ffmpeg'
 
@@ -51,9 +51,10 @@ class Rule30:
         self._update_rgb()
     
     def _update_state(self):
-        rule_index = sg.convolve2d(self.state, self.neighbours,
+        rule_index = sg.convolve2d(self.state[-1, None, :], self.neighbours,
                                    mode='same', boundary='wrap')
-        self.state = self.kernel[rule_index]
+        new_row = self.kernel[rule_index]
+        self.state = np.concatenate((self.state[1:], new_row))
 
         if self.peak_height < self.height:
             self.peak_height += 1
@@ -84,7 +85,7 @@ class VideoConverter:
                 dimensions.
         """
         frame_path = os.path.join(self.tmp_dir.name, f'{self.curr_frame}.png')
-        imageio.imwrite(frame_path, frame)
+        imageio.imwrite(frame_path, frame, compress_level=0)
         self.curr_frame += 1
 
     def write(self, output_path):
