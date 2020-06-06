@@ -121,17 +121,28 @@ class VideoConverter:
         abs_tmp_dir_path = pathlib.Path(self.tmp_dir.name).absolute()
         abs_output_path = pathlib.Path(output_path).absolute()
         os.makedirs(os.path.dirname(abs_output_path), exist_ok=True)
-        subprocess.call([FFMPEG_PATH,
-                         '-framerate', f'{self.fps}',
-                         '-i', f'{abs_tmp_dir_path}/%d.png',
-                         '-vcodec', 'libx264',
-                         '-pix_fmt', 'yuv420p',
-                         # Video quality, lower is better, but zero (lossless)
-                         # doesn't work.
-                         '-crf', '1',
-                         '-y',  # overwrite output files without asking
-                         abs_output_path
-                         ])
+        if OUTPUT_PATH[-4:] == '.mp4':
+            subprocess.call([FFMPEG_PATH,
+                            '-framerate', f'{self.fps}',
+                            '-i', f'{abs_tmp_dir_path}/%d.png',
+                            '-vcodec', 'libx264',
+                            '-pix_fmt', 'yuv420p',
+                            # Video quality, lower is better, but zero
+                            # (lossless) doesn't work.
+                            '-crf', '1',
+                            '-y',  # overwrite output files without asking
+                            abs_output_path
+                            ])
+        elif OUTPUT_PATH[-4:] == '.gif':
+            subprocess.call([FFMPEG_PATH,
+                            '-i', f'{abs_tmp_dir_path}/%d.png',
+                            '-y',  # overwrite output files without asking
+                            abs_output_path
+                            ])
+        else:
+            raise NotImplementedError(
+                "filetype not support"
+            )
         self.tmp_dir.cleanup()
         print(f"Video written to: {abs_output_path}")
 
