@@ -15,8 +15,8 @@ import tqdm
 # Parameters
 VIDEO_WIDTH = 1920
 VIDEO_HEIGHT = 1080
-SECS = int(60 * 2)
-FPS = 10
+SECS = int(60 * 20)
+FPS = 30
 PIXEL_SIZE = 4
 OUTPUT_PATH = 'rule_30.mp4'
 FFMPEG_PATH = '/usr/bin/ffmpeg'
@@ -131,13 +131,16 @@ class VideoConverter:
 
 def main():
     converter = VideoConverter(fps=FPS)
-    animation = Rule30(STATE_WIDTH, STATE_HEIGHT)
+    animation = Rule30(STATE_WIDTH, STATE_HEIGHT + 1)
 
-    for __ in tqdm.trange(NUM_FRAMES):
+    for __ in tqdm.trange(NUM_FRAMES // PIXEL_SIZE,
+                          desc='Generating frames'):
         small_frame = animation.rgb
-        enlarged_frame = cv2.resize(small_frame, (VIDEO_WIDTH, VIDEO_HEIGHT),
+        enlarged_frame = cv2.resize(small_frame,
+                                    (VIDEO_WIDTH, VIDEO_HEIGHT + PIXEL_SIZE),
                                     interpolation=cv2.INTER_NEAREST)
-        converter.add_frame(enlarged_frame)
+        for i in range(PIXEL_SIZE):
+            converter.add_frame(enlarged_frame[i:(-PIXEL_SIZE + i)])
         animation.step()
 
     converter.write(OUTPUT_PATH)
