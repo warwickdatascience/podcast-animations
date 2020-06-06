@@ -1,0 +1,9 @@
+{
+	"video_width": 640,
+	"video_height": 480,
+	"secs": 15,
+	"fps": 30,
+	"pixel_size": 16,
+	"output_path": "rule_30_demo.gif",
+	"comp_level": 3
+}
