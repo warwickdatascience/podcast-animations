@@ -1,0 +1,9 @@
+{
+	"video_width": 1920,
+	"video_height": 1080,
+	"secs": 1200,
+	"fps": 30,
+	"pixel_size": 4,
+	"output_path": "rule_30_full.mp4",
+	"comp_level": 3
+}

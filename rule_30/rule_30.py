@@ -1,5 +1,6 @@
 """Generate an animation of the cellular automaton Rule 30."""
 
+import json
 import os
 import pathlib
 import shutil
@@ -12,15 +13,21 @@ import numpy as np
 import scipy.signal as sg
 import tqdm
 
-# Parameters
-VIDEO_WIDTH = 1920
-VIDEO_HEIGHT = 1080
-SECS = int(60 * 20)
-FPS = 30
-PIXEL_SIZE = 4
-OUTPUT_PATH = 'rule_30.mp4'
+# Global parameters
+CONFIG_PATH = 'config/full.json'
 FFMPEG_PATH = '/usr/bin/ffmpeg'
-COMP_LEVEL = 3  # trade-off speed and temp storage requirements
+
+# Load configuration
+with open(CONFIG_PATH) as f:
+    config = json.load(f)
+    VIDEO_WIDTH = config['video_width']
+    VIDEO_HEIGHT = config['video_height']
+    SECS = config['secs']
+    FPS = config['fps']
+    PIXEL_SIZE = config['pixel_size']
+    OUTPUT_PATH = config['output_path']
+    # Trade-off speed and temp storage requirements
+    COMP_LEVEL = config['comp_level']
 
 # Constants
 STATE_WIDTH = VIDEO_WIDTH // PIXEL_SIZE
