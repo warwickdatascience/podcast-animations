@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import tempfile
 
+import colour
 import cv2
 import imageio
 import numpy as np
@@ -28,6 +29,7 @@ with open(CONFIG_PATH) as f:
     OUTPUT_PATH = config['output_path']
     # Trade-off speed and temp storage requirements
     COMP_LEVEL = config['comp_level']
+    COLOURS = map(colour.Color, config['colours'])
 
 # Constants
 STATE_WIDTH = VIDEO_WIDTH // PIXEL_SIZE
@@ -41,11 +43,7 @@ class Rule30:
     neighbours = np.array([[1, 2, 4]], np.uint8)
     kernel = np.array([0, 1, 2, 3, 4, 0, 0, 0])
     colours = np.array([
-        [0, 0, 0],
-        [28, 19, 100],
-        [19, 46, 125],
-        [0, 108, 182],
-        [178, 196, 255],
+        list(map(lambda x: round(255 * x), c.rgb)) for c in COLOURS
     ], np.uint8)
 
     def __init__(self, width, height):

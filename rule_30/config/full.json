@@ -5,5 +5,12 @@
 	"fps": 30,
 	"pixel_size": 4,
 	"output_path": "rule_30_full.mp4",
-	"comp_level": 3
+	"comp_level": 3,
+	"colours": [
+		"#000",
+		"#1c1364",
+		"#132d7d",
+		"#006db6",
+		"#b2c4ff"
+	]
 }
